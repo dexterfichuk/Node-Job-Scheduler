@@ -7,11 +7,15 @@ print(papa);
 sortArray(1, papa); //Where first parameter is column to sort by
 fcfs(papa);
 sjf(papa);
-//stride(papa);
+stride(papa);
 
 
 
 function print(papa){
+    var heade = ['Job#','Run Time', 'Arrival Time', 'Tickets', 'Stride', 'Start Time', 'End Time', 'Pass', 'Time Left']
+
+    console.log(heade.toString());
+
     for (var i = 0; i < papa.length; i++) {
     console.log(papa[i])
 }
@@ -50,21 +54,33 @@ function calcEnd(sortedA){
     return sortedA;
 }
 
-/*function stride(strideA){
+function stride(strideA){
     var j=0;
-        for (var i = 0; i < sortedA.length; i++) {
-        if (strideA[j][7]=>strideA[i][7]){
-            j=i;
-            }
-        else {
-            strideA[j][7]+=strideA[j][3];
-        }
-        console.log(strideA[j][0])
-        }
+        //for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < strideA.length; i++) {
+    strideA[i][5]=-1;
+    strideA[i][8]=strideA[i][1];
     }
+
+
+    strideA=sortArray(7, strideA);
+        do {
+        console.log('\nMatrix: '+j);
+        j++;
+        print(strideA);
+
+        strideA=sortArray(7, strideA);
+
+        } while (strideA[0][7]<strideA[0][1]);
+
+    console.log('\nFinal Stride Array');
+    strideA=sortArray(0, strideA);
+
+    print(strideA);
+
     return strideA;
 
-}*/
+}
 
 
 function fcfs(fcfsA){
