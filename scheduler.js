@@ -1,12 +1,13 @@
 console.log('Hello world')
 var aTime=0;
-
+global.fcount=0;
 var papa=createArray();
 print(papa);
 
 sortArray(1, papa); //Where first parameter is column to sort by
 fcfs(papa);
-sjsf(papa);
+sjf(papa);
+//stride(papa);
 
 
 
@@ -36,16 +37,35 @@ return papaA;
 function calcEnd(sortedA){
     for (var i = 0; i < sortedA.length; i++) {
         if (i==0){
-            sortedA[i][5]=sortedA[i][1];
+            sortedA[i][5]=0;
+            sortedA[i][6]=sortedA[i][1];
         }
         else    {
-            var j = 5;
-            sortedA[i][5]=sortedA[i-1][j]+sortedA[i][1]+1;
+            var j = 6;
+            sortedA[i][6]=sortedA[i-1][j]+sortedA[i][1]+1;
+            sortedA[i][5]=sortedA[i-1][j]+1;
             //console.log('Reaches else')
         }
     }
     return sortedA;
 }
+
+/*function stride(strideA){
+    var j=0;
+        for (var i = 0; i < sortedA.length; i++) {
+        if (strideA[j][7]=>strideA[i][7]){
+            j=i;
+            }
+        else {
+            strideA[j][7]+=strideA[j][3];
+        }
+        console.log(strideA[j][0])
+        }
+    }
+    return strideA;
+
+}*/
+
 
 function fcfs(fcfsA){
     fcfsA=sortArray(0, fcfsA);
@@ -55,21 +75,55 @@ function fcfs(fcfsA){
     console.log('\nFCFS')
     print(fcfsA);
 
+    arrayToString("FCFS",fcfsA);
+
     return fcfsA;
 }
 
-function sjsf(sjsfA){
-    sjsfA=sortArray(1, sjsfA);
+function sjf(sjfA){
+    sjfA=sortArray(1, sjfA);
 
-    sjsfA=calcEnd(sjsfA);
+    sjfA=calcEnd(sjfA);
 
-    console.log('\nSJSF')
+    console.log('\nSJF')
 
-    sjsfA=sortArray(0, sjsfA);
+    sjsfA=sortArray(0, sjfA);
 
-    print(sjsfA);
+    print(sjfA);
 
-    return sjsfA;
+    return sjfA;
+}
+
+function stcf(stcfA){
+    stcfA=sortArray(1, stcfA);
+
+    stcfA=calcEnd(stcfA);
+
+    console.log('\nSTCF')
+
+    stcfA=sortArray(0, stcfA);
+
+    print(stcfA);
+
+    return stcfA;
+}
+
+function arrayToString(schedulerName, papa){
+    var file='';
+    for (var i = 0; i < papa.length; i++) {
+    file+= papa[i].toString()+',\n';
+    }
+    console.log(file);
+
+    var fs = require('fs');
+    fs.writeFile("file"+schedulerName+fcount+".csv", file, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+
+    console.log("The file was saved!");
+}) 
+    return file;
 }
 
 //
@@ -110,7 +164,7 @@ for (var i = 0; i < stride.length; i++) {
 console.log('\nPapa Array:')
 var papa = new Array(10);
 var titles = new Array(10);
-titles = ['Job#','Run Time', 'Arrival Time', 'Tickets', 'Stride', 'End Time']
+titles = ['Job#','Run Time', 'Arrival Time', 'Tickets', 'Stride', 'Start Time', 'End Time', 'Pass']
 
 var caption='';
 
@@ -121,7 +175,7 @@ console.log(caption)
 
 
 for (var i = 0; i < papa.length; i++) {
-    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0];
+    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0];
 }
 return papa;
 }
