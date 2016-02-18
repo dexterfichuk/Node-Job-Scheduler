@@ -5,8 +5,8 @@ var papa=createArray();
 print(papa);
 
 sortArray(1, papa); //Where first parameter is column to sort by
-fcfs(papa);
-sjf(papa);
+//fcfs(papa);
+//sjf(papa);
 stride(papa);
 
 
@@ -53,31 +53,72 @@ function calcEnd(sortedA){
     return sortedA;
 }
 
-function stride(strideA){
-    var j=1;
+
+function stride(papa){
+    var j=0, q=0;
+    var stridedArray = new Array(10);
     var clock=0;
-    var lowest=0;
-        //for (var i = 0; i < 5; i++) {
-    for (var i = 0; i < strideA.length; i++) {
-    strideA[i][5]=-1;
-    strideA[i][6]=0;
-    strideA[i][8]=strideA[i][1];
+    do
+    {
+        j++;
+        papa=sortArray(7,papa);
+        papa[0][7]+=papa[0][4];
+        papa[0][8]-=5;
+        clock+=6
+        if (papa[0][8]<=0){
+            papa[0][8]=0;
+            papa[0][6]=clock;
+            console.log('\The time is ' + clock)
+            stridedArray[q]=papa[0]
+            q++;
+            papa.splice(0, 1);
+        }
+        //print(papa);
+        
+    } while (papa.length!=0);
+    console.log(papa);
+    stridedArray=sortArray(0,stridedArray);
+
+    console.log('\nNow strided?');
+    print(stridedArray);
+
+    return stridedArray;
+
+    /*papa=sortArray(7,papa);
+    var clock=0;
+    var counter=0;
+    var checker=1;
+
+    do{
+    var valid=false; 
+
+    papa=sortArray(7,papa);
+ 
+    if (papa[counter][8]>0){//Checks if end time is less than 0
+        papa[counter][8]-=5; //Reduce time remaining by 5
+        papa[counter][7]+=papa[0][4];//Adds the stride to the pass count
+        clock+=6;
     }
-    
-        strideA=lowestPriority(strideA);
+    else {
+        papa[counter][8]=0;
+        counter++;
+    }
 
+    for (var i = 0; i < papa.length; i++) {
+        if (papa[i][8]=0){  
+            checker=1;
+        }
+    }
+    if (checker=!1){
+        valid=true;
+    }
 
-    console.log('\nFinal Stride Array');
-    strideA=sortArray(0, strideA);
+} while (valid=false);
+console.log('Test again');
+print(papa);
+return papa;*/
 
-    print(strideA);
-
-    return strideA;
-
-}
-
-function lowestPriority(papa){
-    var lowestJob=0000;
+    /*var lowestJob=0000;
     var clock=0;
     var j=0;
 
@@ -105,7 +146,7 @@ function lowestPriority(papa){
 
     console.log('Final array ' + lowestJob+' '+clock);
     print(papa);
-    return papa;
+    return papa;*/
 }
 
 
@@ -172,35 +213,35 @@ function arrayToString(schedulerName, papa){
 //  Function to create our random array
 //
 function createArray(){
-	console.log('Runtimes:')
+	//console.log('Runtimes:')
 var runTime = new Array(10);
 for (var i = 0; i < runTime.length; i++) {
     runTime[i] = randomIntInc(2,60)
-    console.log(runTime[i])
+    //console.log(runTime[i])
 }
 
-console.log('\nArrival Times:')
+//console.log('\nArrival Times:')
 var arrivalTime = new Array(10);
 for (var i = 0; i < arrivalTime.length; i++) {
 	aTime+=randomIntInc(5,8);
     arrivalTime[i] = aTime;
-    console.log(arrivalTime[i])
+    //console.log(arrivalTime[i])
 
 }
 
-console.log('\nTickets:')
+//console.log('\nTickets:')
 var tickets = new Array(10);
 for (var i = 0; i < tickets.length; i++) {
     tickets[i] = (randomIntInc(1,4)*50);
-    console.log(tickets[i])
+    //console.log(tickets[i])
 
 }
 
-console.log('\nStride:')
+//console.log('\nStride:')
 var stride = new Array(10);
 for (var i = 0; i < stride.length; i++) {
     stride[i] = Math.ceil(1000/tickets[i]);
-    console.log(stride[i])
+    //console.log(stride[i])
 }
 
 console.log('\nPapa Array:')
@@ -217,7 +258,7 @@ console.log(caption)
 
 
 for (var i = 0; i < papa.length; i++) {
-    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0, 0];
+    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0, runTime[i]];
 }
 return papa;
 }
