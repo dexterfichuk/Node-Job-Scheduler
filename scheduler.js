@@ -1,13 +1,16 @@
 console.log('Hello world')
 var aTime=0;
-global.fcount=0;
-var papa=createArray();
-print(papa);
+global.fcount=1;
 
-sortArray(1, papa); //Where first parameter is column to sort by
-//fcfs(papa);
-//sjf(papa);
-stride(papa);
+
+for (var fcount = 1; fcount < 5; fcount++) {
+    var papa=createArray();
+    print(papa);
+    sortArray(1, papa); //Where first parameter is column to sort by
+    fcfs(papa);
+    //sjf(papa);
+    stride(papa);
+}
 
 
 function print(papa){
@@ -65,18 +68,21 @@ function stride(papa){
         papa[0][7]+=papa[0][4];
         papa[0][8]-=5;
         if (papa[0][8]==0){
-            clock+=6
+            clock+=5;
             papa[0][8]=0;
             papa[0][6]=clock;
+            clock+=1;
+
             //console.log('\The time is ' + clock)
             stridedArray[q]=papa[0]
             q++;
             papa.splice(0, 1);
         }
         else if (papa[0][8]<0){
-            clock+=(papa[0][8]*-1)+2;
+            clock+=(papa[0][8]+5);
             papa[0][8]=0;
             papa[0][6]=clock;
+            clock+=(papa[0][8]*-1)+1;
             //console.log('\nThe strange time is ' + clock)
             stridedArray[q]=papa[0]
             q++;
@@ -93,8 +99,9 @@ function stride(papa){
     console.log(papa);
     stridedArray=sortArray(0,stridedArray);
 
-    console.log('\nStrided Array?');
+    console.log('\nStrided Array:');
     print(stridedArray);
+    arrayWriter("StrideS",stridedArray);
 
     return stridedArray;
 }
@@ -108,7 +115,7 @@ function fcfs(fcfsA){
     console.log('\nFCFS')
     print(fcfsA);
 
-    arrayToString("FCFS",fcfsA);
+    arrayWriter("FCFS",fcfsA);
 
     return fcfsA;
 }
@@ -141,7 +148,7 @@ function stcf(stcfA){
     return stcfA;
 }
 
-function arrayToString(schedulerName, papa){
+function arrayWriter(schedulerName, papa){
     var file='';
     for (var i = 0; i < papa.length; i++) {
     file+= papa[i].toString()+',\n';
@@ -149,7 +156,7 @@ function arrayToString(schedulerName, papa){
     console.log(file);
 
     var fs = require('fs');
-    fs.writeFile("file"+schedulerName+fcount+".csv", file, function(err) {
+    fs.writeFile("output/file"+schedulerName+fcount+".csv", file, function(err) {
     if(err) {
         return console.log(err);
     }
