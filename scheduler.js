@@ -166,9 +166,23 @@ function sjf(sjfA){
     hArray[counter]=sjfA[0]
     sjfA.splice(0, 1);
 
-    console.log(hArray[counter][6]);
-
-
+    //console.log(hArray[counter][6]);
+    do{
+    if (sjfA[0][2]<=hArray[hArray.length-1][6] && sjfA.length!=1){
+        console.log('Loop Works!');
+        tempArray[tempArray.length]=sjfA[0];
+        sjfA.splice(0, 1);
+        console.log('\nTemp Array:');
+        print(tempArray);
+    }
+    else{
+        console.log('Made it to else');
+        tempArray=sortArray(1, tempArray);
+        hArray[hArray.length]=tempArray[0];
+        sjfA=appendArray(sjfA, tempArray);
+        tempArray.length = 0;
+    }
+    }while(sjfA!=0);
                 //var index=0;
 
     /*do {
@@ -209,15 +223,27 @@ function sjf(sjfA){
 
     
     sjfA=sortArray(0, sjfA);
+    console.log('\nOriginal Array');
     print(sjfA);
-    console.log('\hArray');
+    console.log('\nhArray');
     print(hArray);
 
     return sjfA;
 }
 
-function calcSjf(sjfA){
+//Adds newArray to oldArray
+function appendArray(oldArray, newArray){
+    do{
+        oldArray[oldArray.length]=newArray[0];
+        newArray.splice(0, 1);
+    } while (newArray.length!=0);
 
+    return oldArray;
+}
+
+function calcSEnd(tempA){
+    tempA[tempA.length-1][6]=tempA[tempA.length-2][6]+tempA[tempA.length-1][2]+1;
+    return tempA;
 }
 
 function stcf(stcfA){
