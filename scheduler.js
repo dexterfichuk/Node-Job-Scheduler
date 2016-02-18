@@ -204,7 +204,7 @@ function sjf(sjfA){
 
     sjfA=sortArray(2,sjfA);
     j++;
-    } while (j!=1);
+    } while (j!=10);
 
 
     console.log('\nTemp Array');
