@@ -64,89 +64,39 @@ function stride(papa){
         papa=sortArray(7,papa);
         papa[0][7]+=papa[0][4];
         papa[0][8]-=5;
-        clock+=6
-        if (papa[0][8]<=0){
+        if (papa[0][8]==0){
+            clock+=6
             papa[0][8]=0;
             papa[0][6]=clock;
-            console.log('\The time is ' + clock)
+            //console.log('\The time is ' + clock)
             stridedArray[q]=papa[0]
             q++;
             papa.splice(0, 1);
         }
+        else if (papa[0][8]<0){
+            clock+=(papa[0][8]*-1)+2;
+            papa[0][8]=0;
+            papa[0][6]=clock;
+            //console.log('\nThe strange time is ' + clock)
+            stridedArray[q]=papa[0]
+            q++;
+            papa.splice(0, 1);
+        }
+        else{
+            clock+=6;    
+        }
+        //console.log('clocks at '+clock);
         //print(papa);
         
     } while (papa.length!=0);
+
     console.log(papa);
     stridedArray=sortArray(0,stridedArray);
 
-    console.log('\nNow strided?');
+    console.log('\nStrided Array?');
     print(stridedArray);
 
     return stridedArray;
-
-    /*papa=sortArray(7,papa);
-    var clock=0;
-    var counter=0;
-    var checker=1;
-
-    do{
-    var valid=false; 
-
-    papa=sortArray(7,papa);
- 
-    if (papa[counter][8]>0){//Checks if end time is less than 0
-        papa[counter][8]-=5; //Reduce time remaining by 5
-        papa[counter][7]+=papa[0][4];//Adds the stride to the pass count
-        clock+=6;
-    }
-    else {
-        papa[counter][8]=0;
-        counter++;
-    }
-
-    for (var i = 0; i < papa.length; i++) {
-        if (papa[i][8]=0){  
-            checker=1;
-        }
-    }
-    if (checker=!1){
-        valid=true;
-    }
-
-} while (valid=false);
-console.log('Test again');
-print(papa);
-return papa;*/
-
-    /*var lowestJob=0000;
-    var clock=0;
-    var j=0;
-
-    //do{
-        var current=1000;
-        
-    for (var i = 0; i < papa.length; i++) {
-        j++;
-        if (papa[i][7]>current || papa[i][8]<=0){
-            console.log('In if section for '+i);
-            //lowestJob=-1;
-        }
-
-        else{
-            //console.log('Reaches else for '+i)
-            current=papa[i][7];
-            lowestJob=i;
-
-            console.log('\nClock ticks '+clock+' For Array '+ j);
-            print(papa);
-        }
-        //console.log('Reaches outside if\n');
-    }
-//} while (j!=2);
-
-    console.log('Final array ' + lowestJob+' '+clock);
-    print(papa);
-    return papa;*/
 }
 
 
