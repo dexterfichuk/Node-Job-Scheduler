@@ -154,35 +154,85 @@ function sjf(sjfA){
     sjfA=sortArray(2, sjfA);
     var hArray = new Array();
     var tempArray = new Array();
-    var counter=0;
+    var tcounter=0;
     var breaker='true';
     var tempArray = new Array();
-
+    var clock = 0;
 
     sjfA[0][6]=sjfA[0][1];
+    clock=sjfA[0][1];
 
-    console.log('\nSJF')
+    //console.log('\nSJF');
 
-    hArray[counter]=sjfA[0]
+    hArray[0]=sjfA[0]
     sjfA.splice(0, 1);
+    var j=0;
+
+    do{
+    //do{
+    for (var i = 0; i < sjfA.length; i++) {
+    //print(sjfA);
+        if (sjfA[i][2]<hArray[(hArray.length)-1][6]){
+            tempArray[tempArray.length]=sjfA[i];
+            //tcounter++;
+            sjfA.splice(0,1);
+            i=-1;
+        }
+    }
+    //}while(sjfA[0][2]<hArray[(hArray.length)-1][6])
+
+    tempArray=sortArray(1, tempArray);
+
+    console.log('\nTemp?')
+    print(tempArray);
+
+
+    if (tempArray.length!=0){
+        hArray[hArray.length]=tempArray[0];
+        tempArray.splice(0,1);
+        hArray=calcEnd(hArray);
+    }
+    else {
+        console.log('None of the arrival times are before the previous end time');
+    }
+
+    for (var i = 0; i < tempArray.length; i++){
+    sjfA[sjfA.length]=tempArray[i];
+    }
+
+    tempArray.length = 0;
+
+    sjfA=sortArray(2,sjfA);
+    j++;
+    } while (j!=1);
+
+
+    console.log('\nTemp Array');
+    print(tempArray);
 
     //console.log(hArray[counter][6]);
-    do{
-    if (sjfA[0][2]<=hArray[hArray.length-1][6] && sjfA.length!=1){
+    //do{
+    /*console.log('The end time is' +hArray[hArray.length])
+
+    if (sjfA[0][2]<=hArray[hArray.length][6] && sjfA.length!=0){
         console.log('Loop Works!');
         tempArray[tempArray.length]=sjfA[0];
         sjfA.splice(0, 1);
         console.log('\nTemp Array:');
         print(tempArray);
     }
+
     else{
         console.log('Made it to else');
         tempArray=sortArray(1, tempArray);
         hArray[hArray.length]=tempArray[0];
+
         sjfA=appendArray(sjfA, tempArray);
         tempArray.length = 0;
-    }
-    }while(sjfA!=0);
+        //hArray=calcSEnd(hArray);*/
+    //}}while (j!=3);
+
+    //}while(sjfA!=0);
                 //var index=0;
 
     /*do {
@@ -225,6 +275,7 @@ function sjf(sjfA){
     sjfA=sortArray(0, sjfA);
     console.log('\nOriginal Array');
     print(sjfA);
+
     console.log('\nhArray');
     print(hArray);
 
@@ -238,11 +289,16 @@ function appendArray(oldArray, newArray){
         newArray.splice(0, 1);
     } while (newArray.length!=0);
 
+    oldArray=sortArray(0, oldArray);
+
     return oldArray;
 }
 
 function calcSEnd(tempA){
-    tempA[tempA.length-1][6]=tempA[tempA.length-2][6]+tempA[tempA.length-1][2]+1;
+    console.log(tempA[tempA.length-1][6]);
+    tempA[tempA.length-1][6]=tempA[tempA.length-2][6]+(tempA[tempA.length-1][1])+1;
+    
+
     return tempA;
 }
 
@@ -327,7 +383,6 @@ console.log(caption)
 
 
 for (var i = 0; i < papa.length; i++) {
-    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0, runTime[i]];
-}
+    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0, runTime[i]];}
 return papa;
 }
