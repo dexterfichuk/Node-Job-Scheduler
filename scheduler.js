@@ -1,15 +1,15 @@
 console.log('Hello world')
 var aTime=0;
-global.fcount=1;
+global.fcount=0;
 
 
-for (var fcount = 1; fcount < 5; fcount++) {
+for (var fcount = 0; fcount < 1; fcount++) {
     var papa=createArray();
     print(papa);
     sortArray(1, papa); //Where first parameter is column to sort by
-    fcfs(papa);
-    //sjf(papa);
-    stride(papa);
+    //fcfs(papa);
+    sjf(papa);
+    //stride(5, papa);
 }
 
 
@@ -56,40 +56,70 @@ function calcEnd(sortedA){
     return sortedA;
 }
 
+//Used for stride scheduling, pass cpu time and array as parameters
+function stride(cpuTime, papa){
+    var q=0;
 
-function stride(papa){
-    var j=0, q=0;
+    //Array for completed rows to be held in
     var stridedArray = new Array(10);
     var clock=0;
     do
     {
-        j++;
+        //Sort the array based on pass count sizes
         papa=sortArray(7,papa);
+
+        //Add the rows stride to pass count
         papa[0][7]+=papa[0][4];
-        papa[0][8]-=5;
+
+        //Reduce the rows time left by cpuTime parameter
+        papa[0][8]-=cpuTime;
+
+        //If the rows time hits 0 perfectly
         if (papa[0][8]==0){
-            clock+=5;
-            papa[0][8]=0;
+            //Increment clock by cpuTime
+            clock+=cpuTime;
+
+            //Set the rows end time to the clock
             papa[0][6]=clock;
+
+            //Add clock overhead
             clock+=1;
 
-            //console.log('\The time is ' + clock)
+            //Add a row to strided array for the completed row
             stridedArray[q]=papa[0]
+
+            //Increment the strided arrays spot for next time
             q++;
+
+            //Remove the completed row from papa
             papa.splice(0, 1);
         }
+
+        //if the job compeltes but its Time Left reaches a negative
         else if (papa[0][8]<0){
-            clock+=(papa[0][8]+5);
+            //Add the cpuTime size to the negative remainder so retrieve how much time it actually used, then add to clock
+            clock+=(papa[0][8]+cpuTime);
+
+            //Set the Time Left to 0
             papa[0][8]=0;
+
+            //Set End Time to clock
             papa[0][6]=clock;
+
+            //Add remaining wasted time + overhead to clock
             clock+=(papa[0][8]*-1)+1;
-            //console.log('\nThe strange time is ' + clock)
+
+            //Add completed row to strided array
             stridedArray[q]=papa[0]
+
+            //Increment strided array row to be used next time
             q++;
+
+            //Remove completed row from papa
             papa.splice(0, 1);
         }
         else{
-            clock+=6;    
+            clock+=(cpuTime+1);    
         }
         //console.log('clocks at '+clock);
         //print(papa);
@@ -121,17 +151,73 @@ function fcfs(fcfsA){
 }
 
 function sjf(sjfA){
-    sjfA=sortArray(1, sjfA);
+    sjfA=sortArray(2, sjfA);
+    var hArray = new Array();
+    var tempArray = new Array();
+    var counter=0;
+    var breaker='true';
+    var tempArray = new Array();
 
-    sjfA=calcEnd(sjfA);
+
+    sjfA[0][6]=sjfA[0][1];
 
     console.log('\nSJF')
 
-    sjsfA=sortArray(0, sjfA);
+    hArray[counter]=sjfA[0]
+    sjfA.splice(0, 1);
 
+    console.log(hArray[counter][6]);
+
+
+                //var index=0;
+
+    /*do {
+        //breaker='true';
+
+
+        if (sjfA[0][2]<=hArray[hArray.length-1][6] ){
+
+            tempArray[tempArray.length]=sjfA[0];
+            sjfA.splice(0, 1);
+            //index++;
+            console.log('reaches if');
+            print(sjfA);
+            console.log(sjfA[(sjfA.length)-1][2]);
+        }
+        else{
+            breaker='false';
+            index=0;
+            tempArray=sortArray(1, tempArray);
+            counter++;
+            hArray[counter]=tempArray[0];
+            tempArray.splice(0, 1);
+            console.log('reaches else');
+            print(sjfA);
+
+
+            do{
+                sjfA.push(tempArray[0]);
+                tempArray.splice(0, 1);
+            }while (tempArray.length!=0)
+
+            console.log([hArray.length-1][6]);
+
+            hArray[hArray.length-1][6]=hArray[(hArray.length-2)][6]+hArray[hArray.length-1][1]+1;
+        }
+
+    } while (sjfA.length!=0);*/
+
+    
+    sjfA=sortArray(0, sjfA);
     print(sjfA);
+    console.log('\hArray');
+    print(hArray);
 
     return sjfA;
+}
+
+function calcSjf(sjfA){
+
 }
 
 function stcf(stcfA){
@@ -156,7 +242,7 @@ function arrayWriter(schedulerName, papa){
     console.log(file);
 
     var fs = require('fs');
-    fs.writeFile("output/file"+schedulerName+fcount+".csv", file, function(err) {
+    fs.writeFile("output/file"+schedulerName+(fcount+1)+".csv", file, function(err) {
     if(err) {
         return console.log(err);
     }
