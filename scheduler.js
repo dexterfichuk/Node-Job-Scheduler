@@ -10,7 +10,6 @@ sjf(papa);
 stride(papa);
 
 
-
 function print(papa){
     var heade = ['Job#','Run Time', 'Arrival Time', 'Tickets', 'Stride', 'Start Time', 'End Time', 'Pass', 'Time Left']
 
@@ -55,23 +54,18 @@ function calcEnd(sortedA){
 }
 
 function stride(strideA){
-    var j=0;
+    var j=1;
+    var clock=0;
+    var lowest=0;
         //for (var i = 0; i < 5; i++) {
     for (var i = 0; i < strideA.length; i++) {
     strideA[i][5]=-1;
+    strideA[i][6]=0;
     strideA[i][8]=strideA[i][1];
     }
+    
+        strideA=lowestPriority(strideA);
 
-
-    strideA=sortArray(7, strideA);
-        do {
-        console.log('\nMatrix: '+j);
-        j++;
-        print(strideA);
-
-        strideA=sortArray(7, strideA);
-
-        } while (strideA[0][7]<strideA[0][1]);
 
     console.log('\nFinal Stride Array');
     strideA=sortArray(0, strideA);
@@ -80,6 +74,38 @@ function stride(strideA){
 
     return strideA;
 
+}
+
+function lowestPriority(papa){
+    var lowestJob=0000;
+    var clock=0;
+    var j=0;
+
+    //do{
+        var current=1000;
+        
+    for (var i = 0; i < papa.length; i++) {
+        j++;
+        if (papa[i][7]>current || papa[i][8]<=0){
+            console.log('In if section for '+i);
+            //lowestJob=-1;
+        }
+
+        else{
+            //console.log('Reaches else for '+i)
+            current=papa[i][7];
+            lowestJob=i;
+
+            console.log('\nClock ticks '+clock+' For Array '+ j);
+            print(papa);
+        }
+        //console.log('Reaches outside if\n');
+    }
+//} while (j!=2);
+
+    console.log('Final array ' + lowestJob+' '+clock);
+    print(papa);
+    return papa;
 }
 
 
@@ -191,7 +217,7 @@ console.log(caption)
 
 
 for (var i = 0; i < papa.length; i++) {
-    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0];
+    papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0, 0];
 }
 return papa;
 }
