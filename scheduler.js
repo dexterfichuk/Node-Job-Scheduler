@@ -1,4 +1,3 @@
-console.log('Hello world')
 var aTime=0;
 global.fcount=0;
 
@@ -150,24 +149,27 @@ function fcfs(fcfsA){
     return fcfsA;
 }
 
+//Shotest Job First
 function sjf(sjfA){
+    //Sorts the array by arrival times, redudent
     sjfA=sortArray(2, sjfA);
+
+    //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
     var hArray = new Array();
     var tempArray = new Array();
     var tcounter=0;
-    var tempArray = new Array();
-    var clock = 0;
 
+    //Run first job
     sjfA[0][6]=sjfA[0][1];
-    clock=sjfA[0][1];
 
-    //console.log('\nSJF');
-
+    //Move it to hArray, then splice it off main array
     hArray[0]=sjfA[0]
     sjfA.splice(0, 1);
-    var j=0;
 
+    //While loop until main array is empty
     do{
+    //Loop through main array searching for arrival times before previous end time
+    //Then add them to temp array while splicing them away.
     for (var i = 0; i < sjfA.length; i++) {
         if (sjfA[i][2]<hArray[(hArray.length)-1][6]){
             tempArray[tempArray.length]=sjfA[i];
@@ -176,43 +178,55 @@ function sjf(sjfA){
         }
     }
 
+    //Sort temp array by run times ascending
     tempArray=sortArray(1, tempArray);
 
+    //If the temp array successfully retrieved some rows
     if (tempArray.length!=0){
+        //Append the first row (lowest run time) to the real array.
         hArray[hArray.length]=tempArray[0];
+        //Splice the appended row from the temp so it's now only unused ones
         tempArray.splice(0,1);
-        hArray=calcEnd(hArray);
+        //Calculate end time of the last row with function
+        hArray=calcSEnd(hArray);
     }
+    //If temp array is empty (the next arrival time is after the previous end time)
     else {
-        console.log('None of the arrival times are before the previous end time');
-        console.log('\nReaches Backup If\n');
+        //Sort main array by job numbers
         sjfA=sortArray(0,sjfA);
+        //appends the first row of the main array (the next arrival) to the completed array.
         hArray[hArray.length]=sjfA[0];
+        //Splicer up
         sjfA.splice(0,1);
-        hArray[hArray.length-1][6]=hArray[(hArray.length)-1][1];
+
+        //Set end time to be its arrival time+
+        hArray[hArray.length-1][6]=hArray[(hArray.length)-1][1]+hArray[(hArray.length)-1][2];
     }
 
+    //Add the reminaning values of the temporary array back to the main array
     for (var i = 0; i < tempArray.length; i++){
     sjfA[sjfA.length]=tempArray[i];
     }
-
+    //Clear the temp array.
     tempArray.length = 0;
 
+    //Resort the main array base on arrival times
     sjfA=sortArray(2,sjfA);
-    j++;
+
+    //End while loop when length of main array = 0
     } while (sjfA.length!=0);
 
-
-    console.log('\nTemp Array');
-    print(tempArray);
+    // console.log('\nTemp Array');
+    // print(tempArray);
    
-    sjfA=sortArray(0, sjfA);
-    console.log('\nOriginal Array');
-    print(sjfA);
+    // sjfA=sortArray(0, sjfA);
+    // console.log('\nOriginal Array');
+    // print(sjfA);
 
 
-    console.log('\nhArray');
+    console.log('\nSJF Array:');
     hArray=sortArray(0,hArray);
+
     print(hArray);
 
     return hArray;
@@ -233,8 +247,6 @@ function appendArray(oldArray, newArray){
 function calcSEnd(tempA){
     console.log(tempA[tempA.length-1][6]);
     tempA[tempA.length-1][6]=tempA[tempA.length-2][6]+(tempA[tempA.length-1][1])+1;
-    
-
     return tempA;
 }
 
@@ -283,7 +295,8 @@ for (var i = 0; i < runTime.length; i++) {
 
 //console.log('\nArrival Times:')
 var arrivalTime = new Array(10);
-for (var i = 0; i < arrivalTime.length; i++) {
+arrivalTime[0]=0;
+for (var i = 1; i < arrivalTime.length; i++) {
 	aTime+=randomIntInc(5,8);
     arrivalTime[i] = aTime;
     //console.log(arrivalTime[i])
@@ -320,5 +333,6 @@ console.log(caption)
 
 for (var i = 0; i < papa.length; i++) {
     papa[i]=['000'+i,runTime[i], arrivalTime[i], tickets[i], stride[i], 0, 0, 0, runTime[i]];}
+
 return papa;
 }
