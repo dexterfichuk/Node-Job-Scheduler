@@ -155,7 +155,6 @@ function sjf(sjfA){
     var hArray = new Array();
     var tempArray = new Array();
     var tcounter=0;
-    var breaker='true';
     var tempArray = new Array();
     var clock = 0;
 
@@ -169,23 +168,15 @@ function sjf(sjfA){
     var j=0;
 
     do{
-    //do{
     for (var i = 0; i < sjfA.length; i++) {
-    //print(sjfA);
         if (sjfA[i][2]<hArray[(hArray.length)-1][6]){
             tempArray[tempArray.length]=sjfA[i];
-            //tcounter++;
             sjfA.splice(0,1);
             i=-1;
         }
     }
-    //}while(sjfA[0][2]<hArray[(hArray.length)-1][6])
 
     tempArray=sortArray(1, tempArray);
-
-    console.log('\nTemp?')
-    print(tempArray);
-
 
     if (tempArray.length!=0){
         hArray[hArray.length]=tempArray[0];
@@ -194,6 +185,11 @@ function sjf(sjfA){
     }
     else {
         console.log('None of the arrival times are before the previous end time');
+        console.log('\nReaches Backup If\n');
+        sjfA=sortArray(0,sjfA);
+        hArray[hArray.length]=sjfA[0];
+        sjfA.splice(0,1);
+        hArray[hArray.length-1][6]=hArray[(hArray.length)-1][1];
     }
 
     for (var i = 0; i < tempArray.length; i++){
@@ -204,82 +200,22 @@ function sjf(sjfA){
 
     sjfA=sortArray(2,sjfA);
     j++;
-    } while (j!=10);
+    } while (sjfA.length!=0);
 
 
     console.log('\nTemp Array');
     print(tempArray);
-
-    //console.log(hArray[counter][6]);
-    //do{
-    /*console.log('The end time is' +hArray[hArray.length])
-
-    if (sjfA[0][2]<=hArray[hArray.length][6] && sjfA.length!=0){
-        console.log('Loop Works!');
-        tempArray[tempArray.length]=sjfA[0];
-        sjfA.splice(0, 1);
-        console.log('\nTemp Array:');
-        print(tempArray);
-    }
-
-    else{
-        console.log('Made it to else');
-        tempArray=sortArray(1, tempArray);
-        hArray[hArray.length]=tempArray[0];
-
-        sjfA=appendArray(sjfA, tempArray);
-        tempArray.length = 0;
-        //hArray=calcSEnd(hArray);*/
-    //}}while (j!=3);
-
-    //}while(sjfA!=0);
-                //var index=0;
-
-    /*do {
-        //breaker='true';
-
-
-        if (sjfA[0][2]<=hArray[hArray.length-1][6] ){
-
-            tempArray[tempArray.length]=sjfA[0];
-            sjfA.splice(0, 1);
-            //index++;
-            console.log('reaches if');
-            print(sjfA);
-            console.log(sjfA[(sjfA.length)-1][2]);
-        }
-        else{
-            breaker='false';
-            index=0;
-            tempArray=sortArray(1, tempArray);
-            counter++;
-            hArray[counter]=tempArray[0];
-            tempArray.splice(0, 1);
-            console.log('reaches else');
-            print(sjfA);
-
-
-            do{
-                sjfA.push(tempArray[0]);
-                tempArray.splice(0, 1);
-            }while (tempArray.length!=0)
-
-            console.log([hArray.length-1][6]);
-
-            hArray[hArray.length-1][6]=hArray[(hArray.length-2)][6]+hArray[hArray.length-1][1]+1;
-        }
-
-    } while (sjfA.length!=0);*/
-
-    
+   
     sjfA=sortArray(0, sjfA);
     console.log('\nOriginal Array');
     print(sjfA);
 
+
     console.log('\nhArray');
+    hArray=sortArray(0,hArray);
     print(hArray);
 
-    return sjfA;
+    return hArray;
 }
 
 //Adds newArray to oldArray
