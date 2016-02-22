@@ -2,13 +2,21 @@ var aTime=0;
 global.fcount=0;
 
 
-for (var fcount = 0; fcount < 1; fcount++) {
+for (var fcount = 0; fcount < 5; fcount++) {
     var papa=createArray();
+    var papajr=papa.slice(0);
+
     print(papa);
     sortArray(1, papa); //Where first parameter is column to sort by
-    //fcfs(papa);
-    sjf(papa);
-    //stride(5, papa);
+    
+    arrayWriter('FCFS', fcfs(papa));
+
+    arrayWriter('Stride', stride(5, papa));
+
+    arrayWriter('SJF', sjf(papajr));
+
+    papa.length=0;
+
 }
 
 
@@ -56,7 +64,8 @@ function calcEnd(sortedA){
 }
 
 //Used for stride scheduling, pass cpu time and array as parameters
-function stride(cpuTime, papa){
+function stride(cpuTime, pArray){
+    var papa = pArray.slice(0);
     var q=0;
 
     //Array for completed rows to be held in
@@ -130,7 +139,6 @@ function stride(cpuTime, papa){
 
     console.log('\nStrided Array:');
     print(stridedArray);
-    arrayWriter("StrideS",stridedArray);
 
     return stridedArray;
 }
@@ -150,8 +158,9 @@ function fcfs(fcfsA){
 }
 
 //Shotest Job First
-function sjf(sjfA){
+function sjf(papa){
     //Sorts the array by arrival times, redudent
+    var sjfA = papa.slice(0);
     sjfA=sortArray(2, sjfA);
 
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
@@ -245,7 +254,7 @@ function appendArray(oldArray, newArray){
 }
 
 function calcSEnd(tempA){
-    console.log(tempA[tempA.length-1][6]);
+    //console.log(tempA[tempA.length-1][6]);
     tempA[tempA.length-1][6]=tempA[tempA.length-2][6]+(tempA[tempA.length-1][1])+1;
     return tempA;
 }
@@ -269,7 +278,7 @@ function arrayWriter(schedulerName, papa){
     for (var i = 0; i < papa.length; i++) {
     file+= papa[i].toString()+',\n';
     }
-    console.log(file);
+    //console.log(file);
 
     var fs = require('fs');
     fs.writeFile("output/file"+schedulerName+(fcount+1)+".csv", file, function(err) {
@@ -295,6 +304,7 @@ for (var i = 0; i < runTime.length; i++) {
 
 //console.log('\nArrival Times:')
 var arrivalTime = new Array(10);
+aTime=0;
 arrivalTime[0]=0;
 for (var i = 1; i < arrivalTime.length; i++) {
 	aTime+=randomIntInc(5,8);
@@ -308,7 +318,6 @@ var tickets = new Array(10);
 for (var i = 0; i < tickets.length; i++) {
     tickets[i] = (randomIntInc(1,4)*50);
     //console.log(tickets[i])
-
 }
 
 //console.log('\nStride:')
