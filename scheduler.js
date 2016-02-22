@@ -1,19 +1,21 @@
-var aTime=0;
 global.fcount=0;
 
 
-for (var fcount = 0; fcount < 5; fcount++) {
+for (var fcount = 0; fcount < 1; fcount++) {
     var papa=createArray();
     var papajr=papa.slice(0);
 
     print(papa);
+
     sortArray(1, papa); //Where first parameter is column to sort by
     
     arrayWriter('FCFS', fcfs(papa));
 
     arrayWriter('Stride', stride(5, papa));
 
-    arrayWriter('SJF', sjf(papajr));
+    arrayWriter('SJF', sjf(papa));
+
+    roundRobin(papa);
 
     papa.length=0;
 
@@ -63,6 +65,86 @@ function calcEnd(sortedA){
     return sortedA;
 }
 
+function roundRobin(papa){
+    var baseA = papa.splice(0);
+    var finalA = new Array ();
+    var quant = [5, 10, 15];
+    var qSize = 0;
+    var clock = 0;
+
+    //Set time left to run time and a few non-important fields to 0
+    for (var i=0; i < baseA.length; i++){
+        baseA[i][8]=baseA[i][1];
+        baseA[i][7]=0;
+        baseA[i][5]=0;
+        baseA[i][6]=0;
+    }
+
+    //Do until the baseA array is empty (finished processing)
+    do {
+        //Deduct current quant size from time left
+        baseA[0][8]-=quant[qSize];
+
+        //Check if time left is less than 0 (job finishes early)
+        if (baseA[0][8]<0){
+
+            //Increment global clock by time used on job
+            clock+=baseA[0][8]+quant[qSize];
+
+            //Set time left to 0 (a negative doesn't make sense)
+            baseA[0][8]=0;
+
+            //Set end time to clock
+            baseA[0][6]=clock;
+
+            //Add row to final array because job is complete
+            finalA[finalA.length]=baseA[0];
+
+            //Remove it from the original array.
+            baseA.splice(0, 1);
+
+        }
+        //If time left is not negative
+        else {
+            //Increment clock by quant size
+            clock+=quant[qSize];
+
+            //If job completes with no time wasted
+            if (baseA[0][8]==0){
+
+                //End time equals global clock
+                baseA[0][6]=clock;
+
+                //Copy the row to final array then splice it from the original
+                finalA[finalA.length]=baseA[0];
+                baseA.splice(0, 1);
+            }
+            //If job still has time left
+            else{
+                //Copy the row to end of array then splice it from the front
+                baseA[baseA.length]=baseA[0];
+                baseA.splice(0, 1);
+            }
+            //Sets the quant back to beginning of array (5) if it has reached the end
+            if (qSize==2){
+                qSize=0;
+            }
+            //Increments the quant to its next interval
+            else {
+                qSize++;
+            }
+        }
+    //End when original array has no incomplete jobs left
+    } while (baseA.length!=0);
+
+//Sort by job number
+finalA=sortArray(0,finalA);
+
+console.log('\nRound Robin with clock='+ clock);
+print(finalA);
+return finalA;
+}
+
 //Used for stride scheduling, pass cpu time and array as parameters
 function stride(cpuTime, pArray){
     var papa = pArray.slice(0);
@@ -103,7 +185,7 @@ function stride(cpuTime, pArray){
             papa.splice(0, 1);
         }
 
-        //if the job compeltes but its Time Left reaches a negative
+        //if the job completes but its Time Left reaches a negative
         else if (papa[0][8]<0){
             //Add the cpuTime size to the negative remainder so retrieve how much time it actually used, then add to clock
             clock+=(papa[0][8]+cpuTime);
@@ -304,7 +386,7 @@ for (var i = 0; i < runTime.length; i++) {
 
 //console.log('\nArrival Times:')
 var arrivalTime = new Array(10);
-aTime=0;
+var aTime=0;
 arrivalTime[0]=0;
 for (var i = 1; i < arrivalTime.length; i++) {
 	aTime+=randomIntInc(5,8);
