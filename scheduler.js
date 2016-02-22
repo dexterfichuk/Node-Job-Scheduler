@@ -15,7 +15,7 @@ for (var fcount = 0; fcount < 1; fcount++) {
 
     arrayWriter('SJF', sjf(papa));
 
-    roundRobin(papa);
+    arrayWriter('Round Robin', roundRobin(papa));
 
     papa.length=0;
 
@@ -107,7 +107,7 @@ function roundRobin(papa){
         //If time left is not negative
         else {
             //Increment clock by quant size
-            clock+=quant[qSize];
+            clock+=quant[qSize]+1;
 
             //If job completes with no time wasted
             if (baseA[0][8]==0){
