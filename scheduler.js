@@ -7,10 +7,7 @@ if (!fs.existsSync('./output')){
 }
 var calculatedA= new Array();
 
-var papa=createArray();
-roundRobin(papa);
-
-/*for (var fcount = 0; fcount < 20; fcount++) {
+for (var fcount = 0; fcount < 20; fcount++) {
     var papa=createArray();
     var papajr=papa.slice(0);
 
@@ -46,7 +43,7 @@ calculatedA = sortArray(1, calculatedA);
 calculatedA.unshift(['Scheduler', 'Round #', 'Avg Turnaround', 'Avg Wait']);
 
 arrayWriter('CalculatedTotals', calculatedA);
-*/
+
 
 
 function calculator(schedulerName, scheduledArray, calculatedArray){
@@ -130,6 +127,10 @@ function roundRobin(papa){
 
         for (var i=0; i < baseA.length; i++){
 
+            if (baseA[i][2]>clock){
+                clock=baseA[i][2]-1;
+            }
+
             baseA[i][8]-=quant[qSize];
 
             if (baseA[i][5]==0 && baseA[i][0]!='0000'){
@@ -170,7 +171,7 @@ function roundRobin(papa){
     finalA=sortArray(0,finalA);
     print(finalA);
 
-    return
+    return finalA;
 
     /*
     //Do until the baseA array is empty (finished processing)
