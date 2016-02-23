@@ -22,7 +22,7 @@ for (var fcount = 0; fcount < 1; fcount++) {
 
     arrayWriter('Round Robin', roundRobin(papa));
 
-    arrayWriter('PSJF', psjf(papa));
+    arrayWriter('PSJF', psjf(papajr));
 
     papa.length=0;
 
@@ -331,30 +331,53 @@ function sjf(papa){
 }
 
 //Shotest Job First
-function psjf(papa){
+function psjf(arr){
     //Sorts the array by arrival times, redudent
-    var originalA=sortArray(2, papa.slice(0));
+    var originalA = new Array(arr.length);
+    originalA=sortArray(2, arr.slice(0));
+    print(originalA);
     var clock=0;
+    var loopCounter=1;
+    console.log('Loop Count: '+loopCounter);
+    loopCounter++;
 
+    for (var i=0; i < originalA.length; i++){
+        originalA[i][8]=originalA[i][1];
+        originalA[i][6]=0;
+    }
+
+    print(originalA);
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
     var completeA = new Array();
     var arrivedArray = new Array();
     var tcounter=0;
     var compareHolder = new Array();
     
-    compareHolder[0]=originalA[0];
-    arrivedArray[0]=originalA[0];
+    compareHolder.push(originalA[0]);
+    //arrivedArray[0]=originalA.shift();
 
-    originalA.splice(0, 1);
+    console.log(arrivedArray[0]);
+    //originalA.splice(0, 1);
 
     do{
         clock+=1;
+        arrivedArray=sortArray(1, arrivedArray);
+        if (compareHolder.length==0){
+            compareHolder[0][0]=arrivedArray[0][0];
+        }
+
         do {
-            if (originalA[0][2]<clock){
+            var quitDo=0;
+            if (originalA[0][2] < clock && originalA.length!=1){
                 arrivedArray[arrivedArray.length]=originalA[0];
                 originalA.splice(0, 1);
             }
-            } while (originalA[0][2]<clock);
+            else {
+                quitDo=1;
+            }
+            } while (quitDo==0);
+
+        console.log('out of do1');
         arrivedArray=sortArray(1, arrivedArray);
 
         if (arrivedArray[0][0]!=compareHolder[0][0]){
@@ -363,13 +386,25 @@ function psjf(papa){
 
         clock+=1;
         arrivedArray[0][8]-=1;
+        console.log('Arrived array clock at '+clock);
+        //print(arrivedArray);
 
         if (arrivedArray[0][8]==0){
+            arrivedArray[0][6]=clock;
             completeA[completeA.length]=arrivedArray[0];
             arrivedArray.splice(0, 1);
         }
+            console.log('\nArrived Array');
+            print(arrivedArray);
+
+            console.log('\nCompleted Array');
+            print(arrivedArray);
+
         
-    } while (originalA.length!=0);
+    } while (arrivedArray.length!=0);
+
+    console.log('end completed array');
+    print(sortArray(0, completeA));
 }
 
 //Adds newArray to oldArray
