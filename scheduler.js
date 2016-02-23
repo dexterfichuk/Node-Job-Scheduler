@@ -38,7 +38,9 @@ for (var fcount = 0; fcount < 20; fcount++) {
 
 fcount-=1;
 
-calculatedA = sortArray(0, calculatedA);
+calculatedA = sortArray(1, calculatedA);
+
+calculatedA.unshift(['Scheduler', 'Round #', 'Avg Turnaround', 'Avg Wait']);
 
 arrayWriter('CalculatedTotals', calculatedA);
 
@@ -57,9 +59,9 @@ function calculator(schedulerName, scheduledArray, calculatedArray){
 
     console.log('Avg Waiting = '+avgWaiting);
 
-    calculatedArray[calculatedArray.length]=[schedulerName, avgTurnaround, avgWaiting];
+    calculatedArray[calculatedArray.length]=[schedulerName, fcount, avgTurnaround, avgWaiting];
 
-    return calculatedArray;
+    return sortArray(1, calculatedArray);
 }
 
 function print(papa){
