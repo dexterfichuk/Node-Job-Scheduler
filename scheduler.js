@@ -22,6 +22,8 @@ for (var fcount = 0; fcount < 1; fcount++) {
 
     arrayWriter('Round Robin', roundRobin(papa));
 
+    arrayWriter('PSJF', psjf(papa));
+
     papa.length=0;
 
 }
@@ -34,7 +36,7 @@ function print(papa){
 
     for (var i = 0; i < papa.length; i++) {
     console.log(papa[i])
-}
+    }
 }
 
 function randomIntInc (low, high) {
@@ -331,85 +333,43 @@ function sjf(papa){
 //Shotest Job First
 function psjf(papa){
     //Sorts the array by arrival times, redudent
-    var psjfA = papa.slice(0);
-    psjfA=sortArray(2, psjfA);
+    var originalA=sortArray(2, papa.slice(0));
+    var clock=0;
 
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
-    var hArray = new Array();
-    var tempArray = new Array();
+    var completeA = new Array();
+    var arrivedArray = new Array();
     var tcounter=0;
+    var compareHolder = new Array();
+    
+    compareHolder[0]=originalA[0];
+    arrivedArray[0]=originalA[0];
 
-    //Run first job
-    psjfA[0][6]=psjfA[0][1];
+    originalA.splice(0, 1);
 
-    //Move it to hArray, then splice it off main array
-    hArray[0]=psjfA[0]
-    psjfA.splice(0, 1);
-
-    //While loop until main array is empty
     do{
-    //Loop through main array searching for arrival times before previous end time
-    //Then add them to temp array while splicing them away.
-    for (var i = 0; i < psjfA.length; i++) {
-        if (psjfA[i][2]<hArray[(hArray.length)-1][6]){
-            tempArray[tempArray.length]=psjfA[i];
-            psjfA.splice(0,1);
-            i=-1;
+        clock+=1;
+        do {
+            if (originalA[0][2]<clock){
+                arrivedArray[arrivedArray.length]=originalA[0];
+                originalA.splice(0, 1);
+            }
+            } while (originalA[0][2]<clock);
+        arrivedArray=sortArray(1, arrivedArray);
+
+        if (arrivedArray[0][0]!=compareHolder[0][0]){
+            clock+=1;
         }
-    }
 
-    //Sort temp array by run times ascending
-    tempArray=sortArray(1, tempArray);
+        clock+=1;
+        arrivedArray[0][8]-=1;
 
-    //If the temp array successfully retrieved some rows
-    if (tempArray.length!=0){
-        //Append the first row (lowest run time) to the real array.
-        hArray[hArray.length]=tempArray[0];
-        //Splice the appended row from the temp so it's now only unused ones
-        tempArray.splice(0,1);
-        //Calculate end time of the last row with function
-        hArray=calcSEnd(hArray);
-    }
-    //If temp array is empty (the next arrival time is after the previous end time)
-    else {
-        //Sort main array by job numbers
-        psjfA=sortArray(0,psjfA);
-        //appends the first row of the main array (the next arrival) to the completed array.
-        hArray[hArray.length]=psjfA[0];
-        //Splicer up
-        psjfA.splice(0,1);
-
-        //Set end time to be its arrival time+
-        hArray[hArray.length-1][6]=hArray[(hArray.length)-1][1]+hArray[(hArray.length)-1][2];
-    }
-
-    //Add the reminaning values of the temporary array back to the main array
-    for (var i = 0; i < tempArray.length; i++){
-    psjfA[psjfA.length]=tempArray[i];
-    }
-    //Clear the temp array.
-    tempArray.length = 0;
-
-    //Resort the main array base on arrival times
-    psjfA=sortArray(2,psjfA);
-
-    //End while loop when length of main array = 0
-    } while (psjfA.length!=0);
-
-    // console.log('\nTemp Array');
-    // print(tempArray);
-   
-    // psjfA=sortArray(0, psjfA);
-    // console.log('\nOriginal Array');
-    // print(psjfA);
-
-
-    console.log('\nPSJF Array:');
-    hArray=sortArray(0,hArray);
-
-    print(hArray);
-
-    return hArray;
+        if (arrivedArray[0][8]==0){
+            completeA[completeA.length]=arrivedArray[0];
+            arrivedArray.splice(0, 1);
+        }
+        
+    } while (originalA.length!=0);
 }
 
 //Adds newArray to oldArray
