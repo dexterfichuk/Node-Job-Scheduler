@@ -7,7 +7,10 @@ if (!fs.existsSync('./output')){
 }
 var calculatedA= new Array();
 
-for (var fcount = 0; fcount < 20; fcount++) {
+var papa=createArray();
+roundRobin(papa);
+
+/*for (var fcount = 0; fcount < 20; fcount++) {
     var papa=createArray();
     var papajr=papa.slice(0);
 
@@ -43,6 +46,7 @@ calculatedA = sortArray(1, calculatedA);
 calculatedA.unshift(['Scheduler', 'Round #', 'Avg Turnaround', 'Avg Wait']);
 
 arrayWriter('CalculatedTotals', calculatedA);
+*/
 
 
 function calculator(schedulerName, scheduledArray, calculatedArray){
@@ -122,6 +126,53 @@ function roundRobin(papa){
         baseA[i][6]=0;
     }
 
+    do {
+
+        for (var i=0; i < baseA.length; i++){
+
+            baseA[i][8]-=quant[qSize];
+
+            if (baseA[i][5]==0 && baseA[i][0]!='0000'){
+                baseA[i][5]=clock+1;
+            }
+
+            if (baseA[i][8]==0){
+                clock+=quant[qSize];
+                baseA[i][6]=clock;
+                finalA[finalA.length]=baseA[i];
+                baseA.splice(i, 1);
+                i--;
+            }
+            else if (baseA[i][8]<0)
+            {
+                clock+=quant[qSize]+baseA[i][8];
+                baseA[i][8]=0;
+                baseA[i][6]=clock+1;
+                finalA[finalA.length]=baseA[i];
+                baseA.splice(i, 1);
+                i--;
+            }
+            else {
+                clock+=quant[qSize];
+            }
+        }
+
+        if (qSize==2){
+            qSize=0;
+        }
+        else {
+            qSize++;
+        }
+
+    } while (baseA.length!=0);
+
+    console.log('Round Robin');
+    finalA=sortArray(0,finalA);
+    print(finalA);
+
+    return
+
+    /*
     //Do until the baseA array is empty (finished processing)
     do {
         //Deduct current quant size from time left
@@ -188,7 +239,7 @@ finalA=sortArray(0,finalA);
 
 console.log('\nRound Robin with clock='+ clock);
 print(finalA);
-return finalA;
+return finalA;*/
 }
 
 //Used for stride scheduling, pass cpu time and array as parameters
