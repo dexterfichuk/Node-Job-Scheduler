@@ -5,6 +5,7 @@ var fs = require('fs');
 if (!fs.existsSync('./output')){
     fs.mkdirSync('./output');
 }
+var calculatedA= new Array();
 
 for (var fcount = 0; fcount < 1; fcount++) {
     var papa=createArray();
@@ -24,10 +25,38 @@ for (var fcount = 0; fcount < 1; fcount++) {
 
     arrayWriter('PSJF', psjf(papajr));
 
-    papa.length=0;
+    calculatedA=calculator('FCFS', fcfs(papa), calculatedA);
 
+    calculatedA=calculator('Stride', stride(5, papa), calculatedA);
+
+    calculatedA=calculator('SJF', sjf(papa), calculatedA);
+
+    calculatedA=calculator('Round Robin', roundRobin(papa), calculatedA);
+
+    calculatedA=calculator('PSJF', psjf(papajr), calculatedA);
+
+    papa.length=0;
 }
 
+arrayWriter('CalculatedTotals', calculatedA);
+
+
+function calculator(schedulerName, scheduledArray, calculatedArray){
+    //avgTurnaround = (endtime - arrivaltime)/numJobs
+    //avgWaiting = (startTime-arrivalTime)/numjobs
+    var avgTurnaround=0, avgWaiting=0, turnSum=0, waitSum=0;
+
+    for (var i=0; i < scheduledArray.length; i++){
+        turnSum+=scheduledArray[i][6]-scheduledArray[i][2];
+        avgWaiting+=scheduledArray[i][5]-scheduledArray[i][2];
+    }
+    avgTurnaround=turnSum/scheduledArray.length;
+    avgWaiting=waitSum/scheduledArray.length;
+
+    calculatedArray[calculatedArray.length]=[schedulerName, avgTurnaround, avgWaiting];
+
+    return calculatedArray;
+}
 
 function print(papa){
     var heade = ['Job#','Run Time', 'Arrival Time', 'Tickets', 'Stride', 'Start Time', 'End Time', 'Pass', 'Time Left']
@@ -345,6 +374,7 @@ function psjf(arr){
         originalA[i][8]=originalA[i][1];
         originalA[i][6]=0;
     }
+    originalA[originalA.length]=[,,originalA[originalA.length-1][2]+1,,,,];
 
     print(originalA);
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
@@ -372,6 +402,10 @@ function psjf(arr){
                 arrivedArray[arrivedArray.length]=originalA[0];
                 originalA.splice(0, 1);
             }
+            // else if (originalA.length==1){
+            //     arrivedArray[arrivedArray.length]=originalA[0];
+            //     originalA.splice(0, 1);
+            // }
             else {
                 quitDo=1;
             }
@@ -394,6 +428,10 @@ function psjf(arr){
             completeA[completeA.length]=arrivedArray[0];
             arrivedArray.splice(0, 1);
         }
+
+            console.log('\nBase Array');
+            print(originalA);
+
             console.log('\nArrived Array');
             print(arrivedArray);
 
@@ -403,8 +441,9 @@ function psjf(arr){
         
     } while (arrivedArray.length!=0);
 
-    console.log('end completed array');
+    console.log('\nEnd completed array');
     print(sortArray(0, completeA));
+    return completeA;
 }
 
 //Adds newArray to oldArray
