@@ -29,7 +29,11 @@ for (var fcount = 0; fcount < 20; fcount++) {
 
     calculatedA=calculator('SJF', sjf(papa), calculatedA);
 
-    calculatedA=calculator('Round Robin', roundRobin(papa), calculatedA);
+    calculatedA=calculator('Round Robin 5', roundRobin(5, papa), calculatedA);
+
+    calculatedA=calculator('Round Robin 10', roundRobin(10, papa), calculatedA);
+
+    calculatedA=calculator('Round Robin 15', roundRobin(15, papa), calculatedA);
 
     calculatedA=calculator('PSJF', psjf(papajr), calculatedA);
 
@@ -108,11 +112,13 @@ function calcEnd(sortedA){
     return sortedA;
 }
 
-function roundRobin(papa){
-    var baseA = papa.splice(0);
-    var finalA = new Array ();
-    var quant = [5, 10, 15];
-    var qSize = 0;
+function roundRobin( chunkS, papa){
+    var baseA = new Array(0);
+    baseA.length=0;
+    baseA = papa.splice(0);
+    var finalA = new Array (0);
+    //var quant = [15, 15, 15];
+    //var qSize = 0;
     var clock = 0;
 
     //Set time left to run time and a few non-important fields to 0
@@ -131,14 +137,14 @@ function roundRobin(papa){
                 clock=baseA[i][2]-1;
             }
 
-            baseA[i][8]-=quant[qSize];
+            baseA[i][8]-=chunkS;
 
             if (baseA[i][5]==0 && baseA[i][0]!='0000'){
                 baseA[i][5]=clock+1;
             }
 
             if (baseA[i][8]==0){
-                clock+=quant[qSize];
+                clock+=chunkS;
                 baseA[i][6]=clock;
                 finalA[finalA.length]=baseA[i];
                 baseA.splice(i, 1);
@@ -146,7 +152,7 @@ function roundRobin(papa){
             }
             else if (baseA[i][8]<0)
             {
-                clock+=quant[qSize]+baseA[i][8];
+                clock+=chunkS+baseA[i][8];
                 baseA[i][8]=0;
                 baseA[i][6]=clock+1;
                 finalA[finalA.length]=baseA[i];
@@ -154,16 +160,16 @@ function roundRobin(papa){
                 i--;
             }
             else {
-                clock+=quant[qSize];
+                clock+=chunkS;
             }
         }
 
-        if (qSize==2){
-            qSize=0;
-        }
-        else {
-            qSize++;
-        }
+        // if (qSize==2){
+        //     qSize=0;
+        // }
+        // else {
+        //     qSize++;
+        // }
 
     } while (baseA.length!=0);
 
@@ -177,7 +183,7 @@ function roundRobin(papa){
     //Do until the baseA array is empty (finished processing)
     do {
         //Deduct current quant size from time left
-        baseA[0][8]-=quant[qSize];
+        baseA[0][8]-=chunkS;
 
         if (baseA[0][5]==0){
             baseA[0][5]=clock;
@@ -187,7 +193,7 @@ function roundRobin(papa){
         if (baseA[0][8]<0){
 
             //Increment global clock by time used on job
-            clock+=baseA[0][8]+quant[qSize];
+            clock+=baseA[0][8]+chunkS;
 
             //Set time left to 0 (a negative doesn't make sense)
             baseA[0][8]=0;
@@ -205,7 +211,7 @@ function roundRobin(papa){
         //If time left is not negative
         else {
             //Increment clock by quant size
-            clock+=quant[qSize]+1;
+            clock+=chunkS+1;
 
             //If job completes with no time wasted
             if (baseA[0][8]==0){
