@@ -7,7 +7,7 @@ if (!fs.existsSync('./output')){
 }
 var calculatedA= new Array();
 
-for (var fcount = 0; fcount < 1; fcount++) {
+for (var fcount = 0; fcount < 20; fcount++) {
     var papa=createArray();
     var papajr=papa.slice(0);
 
@@ -15,15 +15,13 @@ for (var fcount = 0; fcount < 1; fcount++) {
 
     sortArray(1, papa); //Where first parameter is column to sort by
     
-    arrayWriter('FCFS', fcfs(papa));
 
-    arrayWriter('Stride', stride(5, papa));
-
-    arrayWriter('SJF', sjf(papa));
-
-    arrayWriter('Round Robin', roundRobin(papa));
-
-    arrayWriter('PSJF', psjf(papajr));
+    //Used for writing to CSV's for each scheduler, not necessary for this
+    // arrayWriter('FCFS', fcfs(papa));
+    // arrayWriter('Stride', stride(5, papa));
+    // arrayWriter('SJF', sjf(papa));
+    // arrayWriter('Round Robin', roundRobin(papa));
+    // arrayWriter('PSJF', psjf(papajr));
 
     calculatedA=calculator('FCFS', fcfs(papa), calculatedA);
 
@@ -38,7 +36,8 @@ for (var fcount = 0; fcount < 1; fcount++) {
     papa.length=0;
 }
 
-arrayWriter('CalculatedTotals', calculatedA);
+fcount-=1;
+arrayWriter('CalculatedTotals', sortArray(0, calculatedA));
 
 
 function calculator(schedulerName, scheduledArray, calculatedArray){
@@ -120,6 +119,10 @@ function roundRobin(papa){
     do {
         //Deduct current quant size from time left
         baseA[0][8]-=quant[qSize];
+
+        if (baseA[0][5]==0){
+            baseA[0][5]=clock;
+        }
 
         //Check if time left is less than 0 (job finishes early)
         if (baseA[0][8]<0){
@@ -364,10 +367,10 @@ function psjf(arr){
     //Sorts the array by arrival times, redudent
     var originalA = new Array(arr.length);
     originalA=sortArray(2, arr.slice(0));
-    print(originalA);
+    //print(originalA);
     var clock=0;
     var loopCounter=1;
-    console.log('Loop Count: '+loopCounter);
+    //console.log('Loop Count: '+loopCounter);
     loopCounter++;
 
     for (var i=0; i < originalA.length; i++){
@@ -376,7 +379,7 @@ function psjf(arr){
     }
     originalA[originalA.length]=[,,originalA[originalA.length-1][2]+1,,,,];
 
-    print(originalA);
+    //print(originalA);
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
     var completeA = new Array();
     var arrivedArray = new Array();
@@ -411,7 +414,7 @@ function psjf(arr){
             }
             } while (quitDo==0);
 
-        console.log('out of do1');
+        //console.log('out of do1');
         arrivedArray=sortArray(1, arrivedArray);
 
         if (arrivedArray[0][0]!=compareHolder[0][0]){
@@ -420,7 +423,7 @@ function psjf(arr){
 
         clock+=1;
         arrivedArray[0][8]-=1;
-        console.log('Arrived array clock at '+clock);
+        //console.log('Arrived array clock at '+clock);
         //print(arrivedArray);
 
         if (arrivedArray[0][8]==0){
@@ -429,19 +432,19 @@ function psjf(arr){
             arrivedArray.splice(0, 1);
         }
 
-            console.log('\nBase Array');
-            print(originalA);
+            // console.log('\nBase Array');
+            // print(originalA);
 
-            console.log('\nArrived Array');
-            print(arrivedArray);
+            // console.log('\nArrived Array');
+            // print(arrivedArray);
 
-            console.log('\nCompleted Array');
-            print(arrivedArray);
+            //console.log('\nPSJF Array');
+            //print(arrivedArray);
 
         
     } while (arrivedArray.length!=0);
 
-    console.log('\nEnd completed array');
+    console.log('\nPSJF Array');
     print(sortArray(0, completeA));
     return completeA;
 }
