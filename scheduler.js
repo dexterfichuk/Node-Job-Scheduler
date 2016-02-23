@@ -37,7 +37,10 @@ for (var fcount = 0; fcount < 20; fcount++) {
 }
 
 fcount-=1;
-arrayWriter('CalculatedTotals', sortArray(0, calculatedA));
+
+calculatedA = sortArray(0, calculatedA);
+
+arrayWriter('CalculatedTotals', calculatedA);
 
 
 function calculator(schedulerName, scheduledArray, calculatedArray){
@@ -47,10 +50,12 @@ function calculator(schedulerName, scheduledArray, calculatedArray){
 
     for (var i=0; i < scheduledArray.length; i++){
         turnSum+=scheduledArray[i][6]-scheduledArray[i][2];
-        avgWaiting+=scheduledArray[i][5]-scheduledArray[i][2];
+        waitSum+=(scheduledArray[i][5]-scheduledArray[i][2]);
     }
     avgTurnaround=turnSum/scheduledArray.length;
     avgWaiting=waitSum/scheduledArray.length;
+
+    console.log('Avg Waiting = '+avgWaiting);
 
     calculatedArray[calculatedArray.length]=[schedulerName, avgTurnaround, avgWaiting];
 
@@ -189,6 +194,10 @@ function stride(cpuTime, pArray){
     var papa = pArray.slice(0);
     var q=0;
 
+    for (var i=0; i < pArray.length; i++){
+        pArray[i][5]=0;
+    }
+
     //Array for completed rows to be held in
     var stridedArray = new Array(10);
     var clock=0;
@@ -199,6 +208,10 @@ function stride(cpuTime, pArray){
 
         //Add the rows stride to pass count
         papa[0][7]+=papa[0][4];
+
+        if (papa[0][5]==0){
+            papa[0][5]=clock;
+        }
 
         //Reduce the rows time left by cpuTime parameter
         papa[0][8]-=cpuTime;
@@ -270,6 +283,10 @@ function fcfs(fcfsA){
 
     fcfsA=calcEnd(fcfsA);
 
+    // for (var i=0; i < fcfsA.length; i++){
+    //     fcfsA[i][5]=0;
+    // }
+
     console.log('\nFCFS')
     print(fcfsA);
 
@@ -282,7 +299,13 @@ function fcfs(fcfsA){
 function sjf(papa){
     //Sorts the array by arrival times, redudent
     var sjfA = papa.slice(0);
+    var clock = 0;
+
     sjfA=sortArray(2, sjfA);
+
+    for (var i=0; i < sjfA.length; i++){
+        sjfA[i][5]=0;
+    }
 
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
     var hArray = new Array();
@@ -291,6 +314,7 @@ function sjf(papa){
 
     //Run first job
     sjfA[0][6]=sjfA[0][1];
+    clock+=sjfA[0][6]+1;
 
     //Move it to hArray, then splice it off main array
     hArray[0]=sjfA[0]
@@ -314,7 +338,14 @@ function sjf(papa){
     //If the temp array successfully retrieved some rows
     if (tempArray.length!=0){
         //Append the first row (lowest run time) to the real array.
+        if (tempArray[0][5]==0){
+        tempArray[0][5]=clock;
+        }
+
+        clock+=tempArray[0][1]+1;
+
         hArray[hArray.length]=tempArray[0];
+
         //Splice the appended row from the temp so it's now only unused ones
         tempArray.splice(0,1);
         //Calculate end time of the last row with function
@@ -376,6 +407,7 @@ function psjf(arr){
     for (var i=0; i < originalA.length; i++){
         originalA[i][8]=originalA[i][1];
         originalA[i][6]=0;
+        originalA[i][5]=0;
     }
     originalA[originalA.length]=[,,originalA[originalA.length-1][2]+1,,,,];
 
@@ -393,8 +425,12 @@ function psjf(arr){
     //originalA.splice(0, 1);
 
     do{
-        clock+=1;
+
         arrivedArray=sortArray(1, arrivedArray);
+
+
+        clock+=1;
+
         if (compareHolder.length==0){
             compareHolder[0][0]=arrivedArray[0][0];
         }
@@ -402,6 +438,10 @@ function psjf(arr){
         do {
             var quitDo=0;
             if (originalA[0][2] < clock && originalA.length!=1){
+
+                if (originalA[0][5]==0);{
+                    originalA[0][5]=clock-1;
+                }
                 arrivedArray[arrivedArray.length]=originalA[0];
                 originalA.splice(0, 1);
             }
