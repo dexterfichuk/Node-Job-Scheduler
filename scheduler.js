@@ -653,6 +653,7 @@ function stcf(stcfA){
     print(stcfA);
 
     return stcfA;
+}
 
 //
 //	Array writer, capable of writing any multi-dimension matrix to a csv file
