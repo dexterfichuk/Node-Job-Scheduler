@@ -640,7 +640,7 @@ function calcSEnd(tempA){
 
 //
 //	*******is actually not used. some old code just left here for reference purposes
-function stcf(stcfA){
+/*function stcf(stcfA){
     stcfA=sortArray(1, stcfA);
 
     stcfA=calcEnd(stcfA);
@@ -652,7 +652,7 @@ function stcf(stcfA){
     print(stcfA);
 
     return stcfA;
-}
+}*/
 
 //
 //	Array writer, capable of writing any multi-dimension matrix to a csv file
