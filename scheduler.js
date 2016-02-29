@@ -8,7 +8,6 @@
 ||	***********************************************************************************************************
 ||	NOT COMPLETELY COMMENTED, to see rest of comments (sorry if this is cheating) but check it out on GitHub)
 ||	https://github.com/dexterfichuk/Node-Job-Scheduler (don't worry, was a private repository until assignment submitted!)
-
 ==============================*/
 
 //Make output directory if it doesn't exist
