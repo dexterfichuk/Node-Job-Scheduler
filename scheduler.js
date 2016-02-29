@@ -434,7 +434,6 @@ function sjf(papa){
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
     var hArray = new Array();
     var tempArray = new Array();
-    var tcounter=0;
 
     //Run first job
     sjfA[0][6]=sjfA[0][1];
@@ -543,7 +542,6 @@ function stcf(arr){
     //Declare some garbage arrays, temp one for trying random stuff, and hArray for final one.
     var completeA = new Array();
     var arrivedArray = new Array();
-    var tcounter=0;
     var compareHolder = new Array();
     
     //Comparison used to see if the previously processed array is now different from the current shorters job
